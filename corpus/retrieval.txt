@@ -1,0 +1,15 @@
+What happens at retrieval time?
+
+Retrieval is the step where a user's query gets turned into an embedding using the exact same
+model that was used to embed the documents, and that query vector is then compared against
+every stored chunk vector in the vector store. The chunks with the highest similarity scores,
+usually the top 3 to 10, are pulled out as the most relevant pieces of text for that query.
+This is often called "top-k retrieval," where k is however many chunks you decide to keep.
+
+Retrieval quality depends heavily on how the corpus was chunked and embedded upstream. If a
+relevant sentence was chunked awkwardly, split across two chunks, or diluted inside a chunk
+covering unrelated content, it may not surface even though the information technically exists
+in the corpus. This is why some systems combine retrieval methods: pairing a semantic vector
+search with an older lexical method like BM25 (a more refined relative of TF-IDF) so that exact
+keyword matches are not lost when the embedding model alone would rank them low. Combining
+scores from both methods is usually called hybrid search.

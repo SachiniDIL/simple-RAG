@@ -1,0 +1,17 @@
+What is an embedding?
+
+An embedding is a way of turning a piece of text into a list of numbers, called a vector,
+such that pieces of text with similar meaning end up close together in that numeric space.
+This is different from older methods like TF-IDF or Jaccard similarity, which only compare
+the literal words that appear in two documents. An embedding model is trained on huge
+amounts of text so it learns relationships between words and concepts, not just their
+spelling. As a result, two sentences with almost no shared vocabulary can still land close
+together in vector space if they mean the same thing. For example "the deadline was
+extended" and "they pushed back the due date" share almost no words, but a good embedding
+model will place their vectors close to each other because the meaning overlaps heavily.
+
+Embeddings usually have a fixed length, such as 384 or 1536 numbers per piece of text,
+regardless of how long the original text was. Distance between two embeddings is typically
+measured with cosine similarity, which looks at the angle between two vectors rather than
+their raw magnitude. A cosine similarity close to 1 means the two texts are very similar in
+meaning; a value close to 0 means they are unrelated.

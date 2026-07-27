@@ -1,0 +1,17 @@
+What is chunking and why does it matter?
+
+Before you can embed a document, you usually need to split it into smaller pieces called
+chunks. This matters for two reasons. First, embedding models have a maximum input length,
+so a whole book cannot be embedded as a single vector. Second, and more importantly, a single
+embedding for an entire long document tends to blur together many different topics, which
+makes retrieval worse. If a document covers ten different subjects and you embed the whole
+thing as one vector, that vector represents a vague average of all ten subjects rather than
+any one of them clearly.
+
+A common strategy is to split text into chunks of a few hundred words, often with some
+overlap between consecutive chunks so that a sentence sitting right on a chunk boundary is
+not cut in half and orphaned from its context. Choosing chunk size is a tradeoff: chunks that
+are too small lose surrounding context and can be misleading in isolation, while chunks that
+are too large dilute the specific meaning that made them relevant to a query in the first
+place. There is no universally correct chunk size; it depends on the type of document and how
+questions will be asked against it.

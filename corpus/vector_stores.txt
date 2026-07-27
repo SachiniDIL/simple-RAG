@@ -1,0 +1,15 @@
+What is a vector store?
+
+A vector store is a database built to store embeddings and quickly find the ones closest to
+a given query embedding. In principle you could store embeddings as rows in any database,
+but ordinary databases are not built to answer "which of these million vectors are nearest to
+this one" efficiently. A naive approach compares the query vector against every stored vector
+one at a time, which is called a flat or brute-force search. This is exact, and works fine for
+small collections of a few thousand vectors, but becomes slow as the collection grows.
+
+For larger collections, vector stores use approximate nearest neighbor indexes such as HNSW
+(Hierarchical Navigable Small World graphs) or IVF (Inverted File Index). These trade a small
+amount of accuracy for a large speed improvement, so a search that might otherwise touch every
+vector in the database instead only touches a small, cleverly chosen subset. Popular vector
+stores include Chroma and Qdrant, which are dedicated vector databases, and pgvector, which
+adds vector columns and nearest-neighbor search directly to a normal PostgreSQL database.

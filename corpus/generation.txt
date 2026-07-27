@@ -1,0 +1,16 @@
+What does the "generation" step in RAG actually do?
+
+Retrieval-Augmented Generation, or RAG, combines the retrieval step described elsewhere with a
+final step where a language model writes an answer. Instead of asking the language model a
+question directly and hoping it already knows the answer from its training data, the retrieved
+chunks are inserted into the prompt alongside the user's question, typically with an instruction
+telling the model to answer only using the provided material. This is what "augmented" refers to
+in the name: the model's own knowledge is augmented with fresh, specific context at the moment
+of answering.
+
+This matters for two reasons. First, it lets a language model answer questions about information
+it was never trained on, such as a company's internal documents or events after its training
+cutoff. Second, it reduces hallucination, because the model has real source text in front of it
+to ground its answer in, rather than needing to recall facts purely from memory. A well-built RAG
+system will also cite which chunk each part of the answer came from, so a user can verify the
+claim against the original source rather than trusting the model blindly.
