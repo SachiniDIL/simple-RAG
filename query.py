@@ -7,14 +7,14 @@ similar chunks.
 
 Usage:
     python query.py "what is chunking?"
-    python query.py "why do embeddings help with paraphrasing?"
+    python query.py "what is chunking?" --real     # must match how build_index.py was run
 
 IMPORTANT: the embedder here must match the one used in build_index.py, or
 the query vector and stored vectors won't be comparable at all.
 """
 
 import argparse
-from embeddings import HashingEmbedder
+from embeddings import HashingEmbedder, SentenceTransformerEmbedder
 from vector_store import VectorStore
 
 INDEX_DIR = "index"
@@ -24,9 +24,10 @@ TOP_K = 3
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("query", help="The question to ask")
+    parser.add_argument("--real", action="store_true", help="Use real semantic embeddings (must match build_index.py)")
     args = parser.parse_args()
 
-    embedder = HashingEmbedder(dimension=256)
+    embedder = SentenceTransformerEmbedder() if args.real else HashingEmbedder()
     store = VectorStore.load(INDEX_DIR)
 
     query_vector = embedder.embed([args.query])[0]

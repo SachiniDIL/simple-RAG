@@ -6,11 +6,16 @@ and save the resulting vectors + metadata to disk under index/.
 
 Run this once, and again any time the files in corpus/ change. You do NOT
 need to re-run this every time you ask a question - that's what query.py is for.
+
+Usage:
+    python build_index.py            # uses HashingEmbedder (no setup needed)
+    python build_index.py --real     # uses SentenceTransformerEmbedder (real semantic embeddings)
 """
 
+import argparse
 from pathlib import Path
 from chunking import chunk_text
-from embeddings import HashingEmbedder
+from embeddings import HashingEmbedder, SentenceTransformerEmbedder
 from vector_store import VectorStore
 
 CORPUS_DIR = "corpus"
@@ -18,7 +23,11 @@ INDEX_DIR = "index"
 
 
 def main():
-    embedder = HashingEmbedder(dimension=256)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--real", action="store_true", help="Use real semantic embeddings")
+    args = parser.parse_args()
+
+    embedder = SentenceTransformerEmbedder() if args.real else HashingEmbedder()
     print(f"Using embedder: {type(embedder).__name__} (dimension={embedder.dimension})")
 
     all_chunks = []

@@ -1,17 +1,10 @@
 """
 embeddings.py
 
-A deterministic, dependency-free "embedder" for learning the RAG pipeline
-without needing internet access or a model download.
-
-How it works: each word is hashed into one of `dimension` buckets, and we
-count how often each bucket gets hit. The resulting vector is normalized
-(divided by its own length) so cosine similarity behaves correctly.
-
-IMPORTANT LIMITATION: this only recognizes shared WORDS, not shared MEANING —
-same blind spot as the TF-IDF/Jaccard tools you built before. Two sentences
-that mean the same thing but share no vocabulary will score low here. We'll
-swap in a real semantic model later specifically to see that gap close.
+HashingEmbedder: deterministic, offline, word-overlap only (Step 3).
+SentenceTransformerEmbedder: a real, pretrained semantic model. Understands
+meaning, not just word overlap. Downloads model weights from the internet
+the first time it runs, then caches them locally.
 """
 
 import hashlib
@@ -34,3 +27,15 @@ class HashingEmbedder:
 
     def embed(self, texts: list[str]) -> np.ndarray:
         return np.vstack([self._embed_one(t) for t in texts])
+
+
+class SentenceTransformerEmbedder:
+    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
+        from sentence_transformers import SentenceTransformer
+        print(f"Loading model '{model_name}' (first run downloads it - may take a minute)...")
+        self.model = SentenceTransformer(model_name)
+        self.dimension = self.model.get_sentence_embedding_dimension()
+
+    def embed(self, texts: list[str]) -> np.ndarray:
+        vectors = self.model.encode(texts, normalize_embeddings=True)
+        return np.asarray(vectors, dtype=np.float32)
