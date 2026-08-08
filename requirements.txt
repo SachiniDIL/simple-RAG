@@ -2,3 +2,5 @@ numpy
 sentence-transformers
 requests
 rank-bm25
+fastapi
+uvicorn
